@@ -31,6 +31,10 @@ With these data structures you can use:
 ### Unique identifier
 * [UID: fast way to get different!](https://github.com/jdourlens/RasMoon/wiki/UID)
 
+### File
+* [File: read, write!](https://github.com/jdourlens/RasMoon/wiki/File)
+
+
 ## Table
 RasMoon provides several easing functions for table management. You can easily create or transform tables from/to an other source.
 
