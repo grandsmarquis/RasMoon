@@ -21,8 +21,6 @@ Copyright (C) 2011-2012 RasMoon Developpement team
 
 ]]-- 
 
-RasMoon = {}
-
 local apps = {}
 local running = {}
 
@@ -94,6 +92,7 @@ RasMoon.App = {
 	  end
 }
 
+--[[
 
 bob = {
    Name = "Bob",
@@ -137,3 +136,5 @@ RasMoon.App.Start("Bob", "happy")
 RasMoon.App.Start("Jack")
 
 RasMoon.App.Launch()
+
+--]]
