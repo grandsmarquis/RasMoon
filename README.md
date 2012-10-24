@@ -1,5 +1,9 @@
 Welcome to the RasMoon wiki!
 
+<p align="center">
+<img src="https://raw.github.com/jdourlens/RasMoon/master/img/rasmoon_logo.png">
+</p>
+
 here you'll see the what RasMoon is made of!
 
 > RasMoon is licensed under the liberal [zlib/libpng license](http://opensource.org/licenses/zlib-license.php). That means you can use it freely for any purpose including commercial ones.
