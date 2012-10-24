@@ -33,6 +33,17 @@ RasMoon.UID = {
 	       end
 }
 
+RasMoon.File = {
+   Open = function(name)
+	     local res = ""
+	     local file = io.open(name, "r")
+	     if file ~= nil then
+		res = file:read("*all")
+	     end
+	     return (res);
+	  end
+}
+
 RasMoon.Data = {
    Copy = function(object)
       local lookup_table = {}
