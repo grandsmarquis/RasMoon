@@ -1,8 +1,8 @@
 Welcome to the RasMoon wiki!
 
-<center>
-![logo](https://raw.github.com/jdourlens/RasMoon/master/img/rasmoon_logo.png)
-</center>
+<p align="center">
+<img src="https://raw.github.com/jdourlens/RasMoon/master/img/rasmoon_logo.png">
+</p>
 
 here you'll see the what RasMoon is made of!
 
