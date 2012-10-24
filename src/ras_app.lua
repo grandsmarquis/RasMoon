@@ -21,6 +21,8 @@ Copyright (C) 2011-2012 RasMoon Developpement team
 
 ]]-- 
 
+RasMoon = {}
+
 local apps = {}
 local running = {}
 
@@ -51,6 +53,7 @@ RasMoon.App = {
 	    if running[name] ~= nil then
 	       running[name].Exit(bundle)
 	       running[name].Coroutine = nil
+	       runing[name] = nil
 	    end
 	 end,
    Sleep = function()
@@ -60,21 +63,26 @@ RasMoon.App = {
 		  return running[name] ~= nil
 	       end,
    Launch = function(sta, en)
+	       local as = false
 	       RasMoon.App.Starter = sta or function() end
 	       RasMoon.App.Ender = en or function() end
 	       RasMoon.App.Running = true
 	       while (RasMoon.App.Running) do
+		  as = false
+		  RasMoon.App.Starter()
 		  for i,v in pairs(running) do
+		     as = true
 		     if v.Coroutine ~= nil and coroutine.status(v.Coroutine) == "suspended" then
 			coroutine.resume(v.Coroutine)
-		     else if v.Coroutine ~= nil then
-			   v.Exit()
-			   running[i] = nil
-			else
-			   running[i] = nil
-			end
+		     elseif v.Coroutine ~= nil then
+			v.Exit()
+			running[i] = nil
+		     else
+			running[i] = nil
 		     end
 		  end
+		  if not as then RasMoon.App.Running = false end
+		  RasMoon.App.Ender()
 	       end
 	    end,
    Quit = function()
@@ -86,7 +94,7 @@ RasMoon.App = {
 	  end
 }
 
---[[
+
 bob = {
    Name = "Bob",
    Enter = function(bundle)
@@ -129,5 +137,3 @@ RasMoon.App.Start("Bob", "happy")
 RasMoon.App.Start("Jack")
 
 RasMoon.App.Launch()
-
-]]--
