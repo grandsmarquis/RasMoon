@@ -89,7 +89,16 @@ RasMoon.App = {
 		v.Exit()
 		running[i] = nil
 	     end
-	  end
+	  end,
+   Reset = function()
+	      for i,v in ipairs(running) do
+		 running[i] = nil
+	      end
+	      for i,v in ipairs(apps) do
+		 apps[i] = nil
+	      end
+	   end
+   
 }
 
 --[[

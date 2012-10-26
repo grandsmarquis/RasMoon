@@ -34,11 +34,12 @@ RasMoon.UID = {
 }
 
 RasMoon.File = {
-   Open = function(name)
+   Read = function(name)
 	     local res = ""
 	     local file = io.open(name, "r")
 	     if file ~= nil then
 		res = file:read("*all")
+		file:close()
 	     end
 	     return (res);
 	  end
