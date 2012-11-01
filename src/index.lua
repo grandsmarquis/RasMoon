@@ -20,11 +20,8 @@ Copyright (C) 2011-2012 RasMoon Developpement team
 
 
 ]]--
-
-RasMoon = {}
-
+   
+require 'ras_string'
 require 'ras_data'
-require 'ras_table'
-require 'ras_function'
-require 'ras_app'
-require 'ras_math'
+require 'ras_core'
+

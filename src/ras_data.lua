@@ -1,194 +1,258 @@
---[[                                                                                                                                                                                                 
+--[[
 
-Copyright (C) 2011-2012 RasMoonDeveloppement team
+Copyright (C) 2011-2012 RasMoon Developpement team
 
-  This software is provided 'as-is', without any express or implied
-  warranty.  In no event will the authors be held liable for any damages
-  arising from the use of this software.
+This software is provided 'as-is', without any express or implied
+warranty.  In no event will the authors be held liable for any damages
+arising from the use of this software.
 
-  Permission is granted to anyone to use this software for any purpose,
-  including commercial applications, and to alter it and redistribute it
-  freely, subject to the following restrictions:
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
 
-  1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
-  2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
-  3. This notice may not be removed or altered from any source distribution.
+1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+in a product, an acknowledgment in the product documentation would be
+appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
 
 
 ]]-- 
 
-local uid = 0
+Data = {}
 
-RasMoon.UID = {
-   Get = function()
-	    uid = uid + 1
-	    return uid
-	 end,
-   GetString = function()
-		  return (tostring(RasMoon.UID.Get()))
-	       end
-}
-
-RasMoon.File = {
-   Read = function(name)
-	     local res = ""
-	     local file = io.open(name, "r")
-	     if file ~= nil then
-		res = file:read("*all")
-		file:close()
-	     end
-	     return (res);
-	  end
-}
-
-RasMoon.Data = {
-   Copy = function(object)
-      local lookup_table = {}
-      local function _copy(object)
-	 if type(object) ~= "table" then
-            return object
-	 elseif lookup_table[object] then
-	    return lookup_table[object]
-	 end
-	 local new_table = {}
-	 lookup_table[object] = new_table
-	 for index, value in pairs(object) do
-	    new_table[_copy(index)] = _copy(value)
-	 end
-	 return setmetatable(new_table, _copy(getmetatable(object)))
-      end
-      return _copy(object)
-   end,
-   Iterate = function(dataObject, callback)
-		 while (0 < dataObject:size()) do
-		    callback(dataObject:pop(), dataObject:size())
-		 end
-	      end,
-   IterateCopy = function(Object, callback)
-		    local dataObject = RasMoon.Data.Copy(Object)
-		    RasMoon.Data.Iterate(dataObject, callback)
-		 end,
-   Stack = function()
-      local res = {
-	 push = function(self, ...)
-		   for _,v in ipairs{...} do
-		      self[#self + 1] = v
-		   end
-		end,
-	 pop = function(self)
-		  return(table.remove(self))
-	       end,
-	 size = function(self)
-		   return (#self)
-		end
-      }
-      return setmetatable(t or {}, {__index = res})
-   end,
-   PriorityQueue = function(sorter)
-      local res = {
-	 push = function(self, ...)
-		   for _,v in ipairs{...} do
-		      self[#self + 1] = v
-		   end
-		   table.sort(self, self.sorter)
-		end,
-	 pop = function(self)
-		  return(table.remove(self))
-	       end,
-	 size = function(self)
-		   return (#self)
-		end,
-	 sorter = sorter or function(a,b) return a > b end
-      }
-      return setmetatable(t or {}, {__index = res})
-   end,
-   Queue = function()
-      local res = {
-	 l = {
-	    b = 1,
-	    e = 1,
-	 },
-	 push = function(self, ...)
-		   for _, v in ipairs{...} do
-		      self[self.l.e] = v
-		      self.l.e = self.l.e + 1
-		   end
-		end,
-	 pop = function(self)
-		  local res
-		  if self.l.b ~= self.l.e then
-		     res = self[self.l.b]
-		     self[self.l.b] = nil
-		     self.l.b = self.l.b + 1
+Data.Copy = function(object)
+	       local lookup_table = {}
+	       local function _copy(object)
+		  if type(object) ~= "table" then
+		     return object
+		  elseif lookup_table[object] then
+		     return lookup_table[object]
 		  end
-		  return (res)
-	       end,
-	 size = function(self)
-		   return (self.l.e - self.l.b)
-		end
-      }
-      return setmetatable(t or {}, {__index = res})
-   end
-}
+		  local new_table = {}
+		  lookup_table[object] = new_table
+		  for index, value in pairs(object) do
+		     new_table[_copy(index)] = _copy(value)
+		  end
+		  return setmetatable(new_table, _copy(getmetatable(object)))
+	       end
+	       return _copy(object)
+	    end
 
---[[
-local myCallback = function(old, new)
-		      if type(new) == "number" then
-			 print("this is the callback!")
-			 print("this is the old val ", old)
-			 print("this is the new val ", new)
-		      end
-                   end
+table.copy = Data.Copy
 
-q = RasMoon.Data.Queue()
---q = RasMoon.Observer(q, myCallback)
-q:push(1,9,4)
-RasMoon.Data.IterateCopy(q, function(obj, size) print(obj, size) end)
-print("Size = ", q:size()) --it did not change
-RasMoon.Data.Iterate(q, function(obj, size) print(obj, size) end)
-print("Size = ", q:size()) --nah copy was done
+Data.Restore = function(sfile)
+		  local ftables,err = loadfile( sfile )
+		  if err then return _,err end
+		  local tables = ftables()
+		  for idx = 1,#tables do
+		     local tolinki = {}
+		     for i,v in pairs( tables[idx] ) do
+			if type( v ) == "table" then
+			   tables[idx][i] = tables[v[1]]
+			end
+			if type( i ) == "table" and tables[i[1]] then
+			   table.insert( tolinki,{ i,tables[i[1]] } )
+			end
+		     end
+		     -- link indices
+		     for _,v in ipairs( tolinki ) do
+			tables[idx][v[2]],tables[idx][v[1]] =  tables[idx][v[1]],nil
+		     end
+		  end
+		  return tables[1]
+	       end
 
-q = RasMoon.Data.Queue()
-q:push(1)
-q:push(2, 3)
+Data.Save = function(tbl, filename)
+	       local charS,charE = "   ","\n"
+	       local file,err = io.open( filename, "wb" )
+	       if err then return err end
+	       -- initiate variables for save procedure
+	       local tables,lookup = { tbl },{ [tbl] = 1 }
+	       file:write( "return {"..charE )
+	       for idx,t in ipairs( tables ) do
+		  file:write( "-- Table: {"..idx.."}"..charE )
+		  file:write( "{"..charE )
+		  local thandled = {}
+		  for i,v in ipairs( t ) do
+		     thandled[i] = true
+		     local stype = type( v )
+		     -- only handle value
+		     if stype == "table" then
+			if not lookup[v] then
+			   table.insert( tables, v )
+			   lookup[v] = #tables
+			end
+			file:write( charS.."{"..lookup[v].."},"..charE )
+		     elseif stype == "string" then
+			file:write(  charS..exportstring( v )..","..charE )
+		     elseif stype == "number" then
+			file:write(  charS..tostring( v )..","..charE )
+		     end
+		  end
+		  for i,v in pairs( t ) do
+	             -- escape handled values
+		     if (not thandled[i]) then
+			local str = ""
+			local stype = type( i )
+			-- handle index
+			if stype == "table" then
+			   if not lookup[i] then
+			      table.insert( tables,i )
+			      lookup[i] = #tables
+			   end
+			   str = charS.."[{"..lookup[i].."}]="
+			elseif stype == "string" then
+			   str = charS.."["..exportstring( i ).."]="
+			elseif stype == "number" then
+			   str = charS.."["..tostring( i ).."]="
+			end
+			if str ~= "" then
+			   stype = type( v )
+		           -- handle value
+		           if stype == "table" then
+			      if not lookup[v] then
+				 table.insert( tables,v )
+				 lookup[v] = #tables
+			      end
+			      file:write( str.."{"..lookup[v].."},"..charE )
+			   elseif stype == "string" then
+			      file:write( str..exportstring( v )..","..charE )
+			   elseif stype == "number" then
+			      file:write( str..tostring( v )..","..charE )
+			   end
+			end
+		     end
+		  end
+		  file:write( "},"..charE )
+	       end
+	       file:write( "}" )
+	       file:close()
+	    end
 
---]]
+table.save = Data.save
 
+New = {}
 
-RasMoon.Observer = function(t, callback)
-		      local index = {}
-   local mt = {
-      __index = function (t,k)
-                   callback(t[index][k])
-                   return t[index][k]
-                end,
+New.Stack = function(t)
+	       local res = {
+		  push = function(self, ...)
+			    for _,v in ipairs{...} do
+			       self[#self + 1] = v
+			    end
+			 end,
+		  pop = function(self)
+			   return(table.remove(self))
+			end,
+		  get = function(self)
+			   return(self[#self])
+			end,
+		  size = function(self)
+			    return (#self)
+			 end
+	       }
+	       return setmetatable(t or {}, {__index = res})
+	    end
 
-      __newindex = function (t,k,v)
-                      callback(t[index][k], v)
-                      t[index][k] = v
-                   end
-   }
-   local res = {}
-   res[index] = t
-   setmetatable(res, mt)
-   return res
-end
+New.PriorityQueue = function(sorter)
+		       local res = {
+			  push = function(self, ...)
+				    for _,v in ipairs{...} do
+				       self[#self + 1] = v
+				    end
+				    table.sort(self, self.sorter)
+				 end,
+			  pop = function(self)
+				   return(table.remove(self))
+				end,
+			  get = function(self)
+				   return(self[#self])
+				end,
+			  size = function(self)
+				    return (#self)
+				 end,
+			  sorter = sorter or function(a,b) return a > b end
+		       }
+		       return setmetatable(t or {}, {__index = res})
+		    end
 
---[[
-local myCallback = function(old, new)
-                      print("this is the callback!")
-                      if old ~= nil then print("this is the old val " .. old) end
-                      if new ~= nil then print("this is the new val " .. new) end
-                   end
+New.Queue = function(t)
+	       local res = {
+		  l = {
+		     b = 1,
+		     e = 1,
+		  },
+		  push = function(self, ...)
+			    for _, v in ipairs{...} do
+			       self[self.l.e] = v
+			       self.l.e = self.l.e + 1
+			    end
+			 end,
+		  pop = function(self)
+			   local res
+			   if self.l.b ~= self.l.e then
+			      res = self[self.l.b]
+			      self[self.l.b] = nil
+			      self.l.b = self.l.b + 1
+			   end
+			   return (res)
+			end,
+		  get = function(self)
+			   local res
+			   if self.l.b ~= self.l.e then
+			      res = self[self.l.b]
+			   end
+			   return (res)
+			end,
+		  size = function(self)
+			    return (self.l.e - self.l.b)
+			 end
+	       }
+	       return setmetatable(t or {}, {__index = res})
+	    end
 
-myTable = {"orange", "red"}
-myTable = observer(myTable, myCallback)
+New.UID = function(t)
+	     local res = {
+		current = 0,
+		get = function(self)
+			 self.current = self.current + 1
+			 return (self.current)
+			 end
+	     }
+	     return setmetatable(t or {}, {__index = res})
+	  end
 
-myTable[8] = 2
-myTable[8] = 5
-a = myTable[8]
-]]--
+New.Observer = function(t, callback)
+		  local index = {}
+		  local mt = {
+		     __index = function (t,k)
+				  callback(t[index][k])
+				  return t[index][k]
+			       end,
+
+		     __newindex = function (t,k,v)
+				     callback(t[index][k], v)
+				     t[index][k] = v
+				  end
+		  }
+		  local res = {}
+		  res[index] = t
+		  setmetatable(res, mt)
+		  return res
+	       end
+
+table.observer = New.Observer
+
+New.File = function(param)
+	      assert(nil ~= param and type(param) == "string")
+	      local res = ""
+	      local file = io.open(param, "r")
+	      if file ~= nil then
+		 res = file:read("*all")
+		 file:close()
+	      end
+	      return (res:split("\n"))
+	   end
+
