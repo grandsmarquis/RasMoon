@@ -198,3 +198,6 @@ Print = function(param)
 	end
 
 
+_ = function(param)
+       return (param ~= nil)
+    end

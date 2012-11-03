@@ -18,11 +18,29 @@ Copyright (C) 2011-2012 RasMoon Developpement team
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 
-
 ]]--
-   
-require 'ras_string'
-require 'ras_data'
-require 'ras_core'
-require 'ras_function'
 
+Function = {}
+
+Function.Memoize = function(func, hard)
+	     local mem = {}
+	     hard = hard or false
+                if not hard then
+                   setmetatable(mem, {__mode = "v"})
+                end
+                return function(param)
+                          if param ~= nil and mem[param] ~= nil then
+                             return mem[param]
+                          else
+                             mem[param] = func(param)
+                             return (mem[param])
+                          end
+                       end
+             end
+
+Function.Curry = function(func, ...)
+	   local params = {...}
+	   return function(param)
+		     func(param, unpack(params))
+		  end
+	end
