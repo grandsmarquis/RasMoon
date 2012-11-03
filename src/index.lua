@@ -26,3 +26,4 @@ require 'ras_data'
 require 'ras_core'
 require 'ras_function'
 
+SYSTEM = os.execute

@@ -103,7 +103,7 @@ Group = function(param)
      end
 
 Do = function(param)
-	local res = Group { param }
+	local res = Group(param)
 	res()
      end
 
