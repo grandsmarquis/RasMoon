@@ -66,3 +66,11 @@ string.explode = function(self)
 		    end
 		    return (l)
 		 end
+
+string.stripchar = function(str, chr)
+		      local s = ""
+		      for g in str:gmatch( "[^"..chr.."]" ) do
+			 s = s .. g
+		      end
+		      return s
+		   end
