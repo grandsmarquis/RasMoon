@@ -185,10 +185,10 @@ For = function(param)
 
 Print = function(param)
 	   assert(nil ~= param and type(param) == "table")
-	   for i,v in ipairs(param) do
+	   for i,v in pairs(param) do
 	      if "table" == Type { v } then
 		 print("table")
-		 for j,k in ipairs(v) do
+		 for j,k in pairs(v) do
 		    print(j, k)
 		 end
 	      else
