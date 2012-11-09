@@ -27,3 +27,5 @@ require 'ras_core'
 require 'ras_function'
 
 SYSTEM = os.execute
+
+RASMOON = {}
