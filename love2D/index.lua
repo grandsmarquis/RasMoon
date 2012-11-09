@@ -1,12 +1,14 @@
-s = New.State("sampleState")
+s = New.State("index")
 
 s.update = function(dt)
+	      print('this is working!!!')
            end
 
 s.draw = function()
 	 end
 
 s.onEnter = function()
+	       --Load your ressources here
 	    end
 
 s.onLeave = function()
