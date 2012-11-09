@@ -1,0 +1,22 @@
+#!/usr/bin/env lua
+
+package.path = package.path .. ";src/?.lua"
+require 'src.index'
+
+function usage()
+print("rasLove help")
+print("./rasLove project path", "Create a new love2d project at path")
+print("./rasLove state path name", "Create a new love2d project at path")
+print("./rasLove help", "Print this help")
+end
+
+if not _(arg) then usage() end
+if arg[1] == "project" and _(arg[2]) then
+
+elseif arg[1] == "state" and _(arg[2]) then
+
+else
+ usage()
+end
+
+
