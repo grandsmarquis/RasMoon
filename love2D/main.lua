@@ -24,8 +24,6 @@ Copyright (C) 2011-2012 RasMoon Developpement team
 package.path = package.path .. ";RasMoon/?.lua"
 require 'RasMoon.index'
 
-require 'index'
-
 local CURRENT_STATE = nil
 local STATES = {}
 
@@ -39,7 +37,7 @@ New.State = function(name)
 		  mousepressed = _func,
 		  mousereleased = _func,
 		  keypressed = _func,
-		  mousereleased = _func,
+		  keyreleased = _func,
 		  focus = _func
 	       }
 	       return (STATES[name])
@@ -97,3 +95,5 @@ end
 function love.quit()
 
 end
+
+require 'index'

@@ -1,4 +1,4 @@
-s = New.State("index")
+local s = New.State("index")
 
 s.update = function(dt)
 	      print('this is working!!!')
@@ -23,7 +23,7 @@ s.mousereleased = function(x, y, button)
 s.keypressed = function(key, unicode)
 	       end
 
-s.mousereleased = function(key, unicode)
+s.keyreleased = function(key, unicode)
 		  end
 
 s.focus = function(f)

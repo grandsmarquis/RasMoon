@@ -1,4 +1,4 @@
-s = New.State("sampleState")
+local s = New.State("sampleState")
 
 s.update = function(dt)
            end
@@ -21,7 +21,7 @@ s.mousereleased = function(x, y, button)
 s.keypressed = function(key, unicode)
 	       end
 
-s.mousereleased = function(key, unicode)
+s.keyreleased = function(key, unicode)
 		  end
 
 s.focus = function(f)
