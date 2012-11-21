@@ -65,6 +65,8 @@ Data.Restore = function(sfile)
 		  return tables[1]
 	       end
 
+table.restore = Data.Restore
+
 Data.Save = function(tbl, filename)
 	       local charS,charE = "   ","\n"
 	       local file,err = io.open( filename, "wb" )

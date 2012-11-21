@@ -23,9 +23,11 @@ Copyright (C) 2011-2012 RasMoon Developpement team
    
 require 'ras_string'
 require 'ras_data'
-require 'ras_core'
 require 'ras_function'
 
 SYSTEM = os.execute
 
+function _(obj) return (obj ~= nil) end
+
 RASMOON = {}
+
