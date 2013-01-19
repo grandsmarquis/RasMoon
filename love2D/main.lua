@@ -93,7 +93,7 @@ function love.focus(f)
 end
 
 function love.quit()
-
+   CURRENT_STATE.onLeave()
 end
 
 require 'index'
